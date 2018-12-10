@@ -62,4 +62,48 @@ public class Snake {
         mSegmentLocations.add(new Point(h / 2, w / 2));
     }
 
+    void move() {
+
+        //start at back, get segment and move it forward.
+        for (int i = mSegmentLocations.size() - 1; i > 0; i--) {
+            mSegmentLocations.get(i).x = mSegmentLocations.get(i - 1).x;
+            mSegmentLocations.get(i).y = mSegmentLocations.get(i - 1).y;
+        }
+
+        Point p = mSegmentLocations.get(0);
+
+        switch (heading) {
+            case UP:
+                p.y--;
+                break;
+            case DOWN:
+                p.y++;
+                break;
+            case LEFT:
+                p.x--;
+                break;
+            case RIGHT:
+                p.x++;
+                break;
+        }
+        mSegmentLocations.set(0, p);
+    }
+
+    boolean detectDeath() {
+        boolean isDead = false;
+
+        //wall collision
+        if (mSegmentLocations.get(0).x == -1 || mSegmentLocations.get(0).x > mMoveRange.x || mSegmentLocations.get(0).y == -1 || mSegmentLocations.get(0).y > mMoveRange.y) {
+            isDead = true;
+        }
+
+        //self collision
+        for (int i = mSegmentLocations.size() - 1; i > 0; i--) {
+            if (mSegmentLocations.get(0).x == mSegmentLocations.get(i).x && mSegmentLocations.get(0).y == mSegmentLocations.get(i).y) {
+                isDead = true;
+            }
+        }
+        return isDead;
+    }
+
 }

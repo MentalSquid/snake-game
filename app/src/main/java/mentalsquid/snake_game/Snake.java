@@ -32,10 +32,10 @@ public class Snake {
         mSegmentSize = segmentSize;
         mMoveRange = movementRange;
 
-        mBitmapHeadRight = BitmapFactory.decodeResource(R.drawable.head);
-        mBitmapHeadLeft = BitmapFactory.decodeResource(R.drawable.head);
-        mBitmapHeadUp = BitmapFactory.decodeResource(R.drawable.head);
-        mBitmapHeadDown = BitmapFactory.decodeResource(R.drawable.head);
+        mBitmapHeadRight = BitmapFactory.decodeResource(context.getResources(), R.drawable.head);
+        mBitmapHeadLeft = BitmapFactory.decodeResource(context.getResources(), R.drawable.head);
+        mBitmapHeadUp = BitmapFactory.decodeResource(context.getResources(), R.drawable.head);
+        mBitmapHeadDown = BitmapFactory.decodeResource(context.getResources(), R.drawable.head);
         //Orient bitmaps
         mBitmapHeadRight = Bitmap.createScaledBitmap(mBitmapHeadRight, segmentSize, segmentSize, false);
 
@@ -50,7 +50,7 @@ public class Snake {
         matrix.preRotate(180);
         mBitmapHeadDown = Bitmap.createBitmap(mBitmapHeadRight, 0, 0, segmentSize, segmentSize, matrix, true);
 
-        mBitmapBody = BitmapFactory.decodeResource(R.drawable.body);
+        mBitmapBody = BitmapFactory.decodeResource(context.getResources(), R.drawable.body);
         mBitmapBody = Bitmap.createScaledBitmap(mBitmapBody, segmentSize, segmentSize, false);
 
         halfWayPoint = movementRange.x * segmentSize / 2;

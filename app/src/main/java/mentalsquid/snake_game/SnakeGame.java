@@ -65,10 +65,12 @@ public class SnakeGame extends SurfaceView implements Runnable {
         mSurfaceHolder = getHolder();
         mPaint = new Paint();
         mApple = new Apple(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize);
+        mSnake = new Snake(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize);
     }
 
     public void newGame() {
         mApple.spawn();
+        mSnake.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
         mScore = 0;
         mNextFrameTime = System.currentTimeMillis();
     }
@@ -111,6 +113,7 @@ public class SnakeGame extends SurfaceView implements Runnable {
             mPaint.setTextSize(120);
             mCanvas.drawText("" + mScore, 20, 120, mPaint);
             mApple.draw(mCanvas, mPaint);
+            mSnake.draw(mCanvas, mPaint);
 
             if (mPaused) {
                 mPaint.setColor(Color.argb(255, 255, 255, 255));
@@ -123,7 +126,17 @@ public class SnakeGame extends SurfaceView implements Runnable {
     }
 
     private void update() {
+        mSnake.move();
 
+        if (mSnake.checkDinner(mApple.getLocation())) {
+            mApple.spawn();
+            mScore += 1;
+            mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+        }
+        if (mSnake.detectDeath()) {
+            mSP.play(mCrashID, 1, 1, 0, 0, 1);
+            mPaused = true;
+        }
     }
 
     public boolean updateRequired() {
@@ -148,6 +161,7 @@ public class SnakeGame extends SurfaceView implements Runnable {
 
                     return true;
                 }
+                mSnake.switchHeading(motionEvent);
                 break;
             default:
                 break;

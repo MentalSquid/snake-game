@@ -3,8 +3,11 @@ package mentalsquid.snake_game;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Point;
+import android.view.MotionEvent;
 
 import java.util.ArrayList;
 
@@ -106,4 +109,74 @@ public class Snake {
         return isDead;
     }
 
+    boolean checkDinner(Point p) {
+        if (mSegmentLocations.get(0).x == p.x && mSegmentLocations.get(0).y == p.y) {
+            mSegmentLocations.add(new Point(-10, -10));
+            return true;
+        }
+        return false;
+    }
+
+    void draw(Canvas canvas, Paint paint) {
+
+        if (!mSegmentLocations.isEmpty()) {
+            //draw head
+            switch (heading) {
+                case RIGHT:
+                    canvas.drawBitmap(mBitmapHeadRight, mSegmentLocations.get(0).x * mSegmentSize, mSegmentLocations.get(0).y * mSegmentSize, paint);
+                    break;
+                case LEFT:
+                    canvas.drawBitmap(mBitmapHeadLeft, mSegmentLocations.get(0).x * mSegmentSize, mSegmentLocations.get(0).y * mSegmentSize, paint);
+                    break;
+                case UP:
+                    canvas.drawBitmap(mBitmapHeadUp, mSegmentLocations.get(0).x * mSegmentSize, mSegmentLocations.get(0).y * mSegmentSize, paint);
+                    break;
+                case DOWN:
+                    canvas.drawBitmap(mBitmapHeadDown, mSegmentLocations.get(0).x * mSegmentSize, mSegmentLocations.get(0).y * mSegmentSize, paint);
+                    break;
+            }
+            //draw body
+            for (int i = 1; i < mSegmentLocations.size(); i++) {
+                canvas.drawBitmap(mBitmapBody, mSegmentLocations.get(i).x * mSegmentSize, mSegmentLocations.get(i).y * mSegmentSize, paint);
+
+            }
+        }
+    }
+
+    void switchHeading(MotionEvent motionEvent) {
+        if (motionEvent.getX() >= halfWayPoint) {
+            //rotate right
+            switch (heading) {
+                case UP:
+                    heading = Heading.RIGHT;
+                    break;
+                case DOWN:
+                    heading = Heading.LEFT;
+                    break;
+                case RIGHT:
+                    heading = Heading.DOWN;
+                    break;
+                case LEFT:
+                    heading = Heading.UP;
+                    break;
+            }
+        } else {
+            //rotate left
+            switch (heading) {
+                case UP:
+                    heading = Heading.LEFT;
+                    break;
+                case DOWN:
+                    heading = Heading.RIGHT;
+                    break;
+                case RIGHT:
+                    heading = Heading.UP;
+                    break;
+                case LEFT:
+                    heading = Heading.DOWN;
+                    break;
+            }
+
+        }
+    }
 }
